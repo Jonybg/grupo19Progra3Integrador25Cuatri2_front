@@ -3,12 +3,18 @@ const categoria = document.getElementById("categoria")
 const cartContainer = document.getElementById("cart-container")
 const carritoElementos = document.querySelector(".carrito-elementos")
 const cartButton = document.getElementById("cart-img")
+const boton_atras = document.getElementById("button-atras")
 const URL = "http://localhost:3000"
+const user_span = document.getElementById("user")
+const usuario = localStorage.getItem("usuario");
+
+
+
 let productos = []
 let carrito = JSON.parse(localStorage.getItem("carrito")) || []
 async function  llamarProductos() {
     try {
-        const response = await fetch(`${URL}/products`)
+        const response = await fetch(`${URL}/api/products`)
         const data = await response.json()
         productos = data.payload;
         mostrarProductos(productos)
@@ -72,11 +78,14 @@ function mostrarProductosCarrito() {
   });
 
   carritoElementos.innerHTML = cardCarrito;
+  actualizarCantidadCarrito();
+
 }
 
 function sumarCantidad(i) {
   carrito[i].cantidad += 1;
   localStorage.setItem("carrito", JSON.stringify(carrito));
+  actualizarCantidadCarrito();
   mostrarProductosCarrito();
 }
 
@@ -87,6 +96,7 @@ function restarCantidad(i) {
     carrito.splice(i, 1); 
   }
   localStorage.setItem("carrito", JSON.stringify(carrito));
+  actualizarCantidadCarrito();
   mostrarProductosCarrito();
 }
 
@@ -101,12 +111,15 @@ function agregarAcarrito(id) {
     }
     
     localStorage.setItem("carrito", JSON.stringify(carrito))
+    actualizarCantidadCarrito();
+    actualizarCantidadCarrito();
     mostrarProductosCarrito()
 }
 
 function eliminarProducto(i) {
   carrito.splice(i, 1);
   localStorage.setItem("carrito", JSON.stringify(carrito));
+  actualizarCantidadCarrito();
   mostrarProductosCarrito();
 }
 
@@ -115,14 +128,40 @@ function cartToggle() {
     cartContainer.classList.toggle("visible")
 }
 
-categoria.addEventListener("change", filtrarProductos)
+function renderizarUsuario(){
+  user_span.innerText = usuario;
+}
 
+function volverAtras(){
+  localStorage.removeItem("usuario");
+  localStorage.removeItem("carrito")
+  window.location.href="login.html"
+}
+
+function validarUsuario(){
+  if(!usuario){
+    window.location.href="login.html"
+  }
+}
+
+function actualizarCantidadCarrito() {
+  const total = carrito.reduce((acc, prod) => acc + (prod.precio * prod.cantidad), 0);
+  const cartTotal = document.getElementById("cart_total");
+  cartTotal.textContent = `Total: $${total} ARS`;
+}
+
+
+
+categoria.addEventListener("change", filtrarProductos)
 cartButton.addEventListener("click",cartToggle)
+boton_atras.addEventListener("click",volverAtras)
 
 
 function init() {
+   validarUsuario()
     llamarProductos()
     mostrarProductosCarrito()
+    renderizarUsuario()
 }
 
 init()
