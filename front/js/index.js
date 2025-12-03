@@ -4,6 +4,7 @@ const cartContainer = document.getElementById("cart-container")
 const carritoElementos = document.querySelector(".carrito-elementos")
 const cartButton = document.getElementById("cart-img")
 const boton_atras = document.getElementById("button-atras")
+const boton_vaciar = document.getElementById("button-vaciar")
 const URL = "http://localhost:3000"
 const user_span = document.getElementById("user")
 const usuario = localStorage.getItem("usuario");
@@ -150,11 +151,22 @@ function actualizarCantidadCarrito() {
   cartTotal.textContent = `Total: $${total} `;
 }
 
+function vaciarCarrito() {
+  if (confirm("¿Seguro que quieres vaciar el carrito?")) {
+    carrito = [];
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    mostrarProductosCarrito();
+    actualizarCantidadCarrito();
+  }
+}
+
+
 
 
 categoria.addEventListener("change", filtrarProductos)
 cartButton.addEventListener("click",cartToggle)
 boton_atras.addEventListener("click",volverAtras)
+boton_vaciar.addEventListener("click",vaciarCarrito)
 
 
 function init() {
