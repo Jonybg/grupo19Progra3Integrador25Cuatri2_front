@@ -34,7 +34,7 @@ function mostrarProductos(array) {
         <div class="card-product">
             <span>${producto.nombre} </span>
             <img src="${producto.imagen}" alt="">
-            <span>Precio: ${producto.precio} ARS </span>
+            <span>Precio: $${producto.precio}  </span>
             <button onclick="agregarAcarrito(${producto.id})">Agregar</button>
         </div>
         `
@@ -147,7 +147,7 @@ function validarUsuario(){
 function actualizarCantidadCarrito() {
   const total = carrito.reduce((acc, prod) => acc + (prod.precio * prod.cantidad), 0);
   const cartTotal = document.getElementById("cart_total");
-  cartTotal.textContent = `Total: $${total} ARS`;
+  cartTotal.textContent = `Total: $${total} `;
 }
 
 
